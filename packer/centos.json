@@ -9,13 +9,18 @@
         "node": "{{ user `proxmox_node_name` }}",
         "network_adapters": [
             {
-            "bridge": "vmbr0"
+            "bridge": "vmbr0",
+            "model": "virtio"
             }
         ],
 
         "ssh_username": "{{ user `ssh_username` }}",
         "ssh_password": "{{ user `ssh_password` }}",
         "ssh_timeout": "20m",
+        "http_directory": "http",
+        "http_port_min": "8598",
+        "http_port_max": "8598",
+
 
         "disks": [
             {
@@ -31,7 +36,7 @@
         "qemu_agent": true,
         "unmount_iso": true,
 
-        "iso_file": "local:iso/CentOS-8.2.2004-x86_64-boot.iso",
+        "iso_file": "ISOs:iso/CentOS-8.2.2004-x86_64-boot.iso",
         "cores": "2",
         "sockets": "2",
         "memory": "2048",
@@ -43,3 +48,4 @@
     }
     ]
 }
+
