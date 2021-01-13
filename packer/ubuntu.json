@@ -10,8 +10,8 @@
       "network_adapters": [
         {
           "bridge": "vmbr0"
-      }
-    ],
+        }
+      ],
 
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_password": "{{ user `ssh_password` }}",

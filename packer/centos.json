@@ -1,51 +1,51 @@
 {
-    "builders": [
-    {
-        "type": "proxmox",
-        "proxmox_url": "https://{{ user `proxmox_host` }}/api2/json",
-        "insecure_skip_tls_verify": true,
-        "username": "{{ user `proxmox_username` }}",
-        "password": "{{ user `proxmox_password` }}",
-        "node": "{{ user `proxmox_node_name` }}",
-        "network_adapters": [
-            {
-            "bridge": "vmbr0",
-            "model": "virtio"
-            }
-        ],
+"builders": [
+{
+"type": "proxmox",
+"proxmox_url": "https://{{ user `proxmox_host` }}/api2/json",
+"insecure_skip_tls_verify": true,
+"username": "{{ user `proxmox_username` }}",
+"password": "{{ user `proxmox_password` }}",
+"node": "{{ user `proxmox_node_name` }}",
+"network_adapters": [
+{
+"bridge": "vmbr0",
+"model": "virtio"
+}
+],
 
-        "ssh_username": "{{ user `ssh_username` }}",
-        "ssh_password": "{{ user `ssh_password` }}",
-        "ssh_timeout": "20m",
-        "http_directory": "http",
-        "http_port_min": "8598",
-        "http_port_max": "8598",
+"ssh_username": "{{ user `ssh_username` }}",
+"ssh_password": "{{ user `ssh_password` }}",
+"ssh_timeout": "20m",
+"http_directory": "http",
+"http_port_min": "8598",
+"http_port_max": "8598",
 
 
-        "disks": [
-            {
-            "type": "scsi",
-            "disk_size": "20G",
-            "storage_pool": "unraid01",
-            "storage_pool_type": "directory",
-            "format": "raw",
-            "cache_mode": "writeback"
-            }
-        ],
+"disks": [
+{
+"type": "scsi",
+"disk_size": "20G",
+"storage_pool": "unraid01",
+"storage_pool_type": "directory",
+"format": "raw",
+"cache_mode": "writeback"
+}
+],
 
-        "qemu_agent": true,
-        "unmount_iso": true,
+"qemu_agent": true,
+"unmount_iso": true,
 
-        "iso_file": "ISOs:iso/CentOS-8.2.2004-x86_64-boot.iso",
-        "cores": "2",
-        "sockets": "2",
-        "memory": "2048",
-        "os": "l26",
-        "template_name": "CentOs-8.2",
-        "boot_command": [
-            "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
-        ]
-    }
-    ]
+"iso_file": "ISOs:iso/CentOS-8.2.2004-x86_64-boot.iso",
+"cores": "2",
+"sockets": "2",
+"memory": "2048",
+"os": "l26",
+"template_name": "CentOs-8.2",
+"boot_command": [
+"<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+]
+}
+]
 }
 
