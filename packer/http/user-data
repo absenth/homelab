@@ -1,0 +1,38 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US
+  keyboard:
+    layout: en
+    variant: us
+  network:
+    network:
+      version: 2
+      ethernets:
+        ens33:
+          dhcp4: true
+  storage:
+    layout:
+      name: lvm
+  identity:
+    hostname: packer
+    username: packer
+    password: $6$rounds=4096$TAXyhxgqx7QBmjh.$2z09522kKe8VvRKVnG9sEW4ovNtSQunjXJZnMlrOjZFNIEN/xvHSrWx6Rxsk3gObExtYXDlEQiYNGw8J7CVzv0
+  ssh:
+    install-server: true
+  packages:
+    - qemu-guest-agent
+  user-data:
+    disable_root: 
+    users:
+      - name: ansible
+        passwd: $6$rounds=4096$TAXyhxgqx7QBmjh.$2z09522kKe8VvRKVnG9sEW4ovNtSQunjXJZnMlrOjZFNIEN/xvHSrWx6Rxsk3gObExtYXDlEQiYNGw8J7CVzv0
+        groups: [sudo]
+        lock-passwd: false
+        sudo: ALL=(ALL) NOPASSWD:ALL
+        shell: /bin/bash
+        ssh_authorized_keys:
+          - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQmublU2tTKJ44bZC7YEK21Qu3LEU/p1LnITs2asdzxrgOWr7i8Rv40TaSvPLdUHofUUKfOHYbAhswhUQHEavyFdTIONiYRXzGZSF5hZ7nLl06DVYsJl/9G9z2y7vAtCyhltNB9d7Hg6VxZn7JTgUyzRaq8ijbsExiNXGm6+PkHf7yWJdoSUuKYHjktUNSfTicmjlytHtpmekDRj3jSZMmXz5w+PSK8QFUMhtzNF348i/OJZRmoz8PXlyWoFW0c+5T5KBUkRu7zrFbb5I/PKchpLBtXy3GnkFNBQ+6Q0f1h6N86pO8rphlGG2cg+cLfjN6yC8dCdw1Vgl5Ra6tYUzjJ6UpVdapQ2BZmO2rVsX7oo9miSA3OZ2U/og5ynR6FQsL4IvnuDEs0sZvHl3mhbJ6asxhmpzLLWUwWgCg06oe0ZlpOrlQTQy6fXLHhlS/xa/yh5+28R+6EXAqKKfUBYVJNkKV1QQJRti4JobIg4nwfqeZvK6TBF26QYH1oJ1MYzs=
+  late-commands:
+    - 'sed -i "s/dhcp4: true/&\n      dhcp-identifier: mac/" /target/etc/netplan/00-installer-config.yaml'
+    - echo '%ansible ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu

@@ -1,0 +1,8 @@
+{
+    "proxmox_host": "{{ vault `/cubbyhole/proxmox` `host` }}",
+    "proxmox_node_name": "{{ vault `/cubbyhole/proxmox` `node` }}",
+    "proxmox_username": "{{ vault `/cubbyhole/proxmox` `un` }}",     
+    "proxmox_password": "{{ vault `/cubbyhole/proxmox` `pw` }}",
+    "ssh_username": "packer",
+    "ssh_password": "packer"
+}

@@ -1,0 +1,52 @@
+{
+  "builders": [
+    {
+      "type": "proxmox",
+      "proxmox_url": "https://{{ user `proxmox_host` }}/api2/json",
+      "insecure_skip_tls_verify": true,
+      "username": "{{ user `proxmox_username` }}",
+      "password": "{{ user `proxmox_password` }}",
+      "node": "{{ user `proxmox_node_name` }}",
+      "network_adapters": [
+        {
+          "bridge": "vmbr0"
+      }
+    ],
+
+      "ssh_username": "{{ user `ssh_username` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_timeout": "20m",
+
+      "disks": [
+        {
+        "type": "scsi",
+        "disk_size": "20G",
+        "storage_pool": "unraid01",
+        "storage_pool_type": "directory",
+        "format": "raw",
+        "cache_mode": "writeback"
+      }
+    ],
+
+      "qemu_agent": true,
+      "unmount_iso": true,
+
+      "iso_file": "local:iso/ubuntu-20.04.1-legacy-server-amd64.iso",
+
+      "http_directory": "http",
+
+      "boot_wait": "10s",
+      "cores": "2",
+      "sockets": "2",
+      "memory": "2048",
+      "os": "l26",
+      "template_name": "ubuntu-20.04",
+      "boot_command": [
+        "<esc><wait><esc><wait><f6><wait><esc><wait>",
+        "<bs><bs><bs><bs><bs>",
+        "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
+        "<tab><enter>"
+      ]
+    }
+  ]
+}
