@@ -1,0 +1,70 @@
+{
+    "builders": [
+        {
+            "type": "proxmox",
+            "proxmox_url": "https://{{ user `proxmox_host` }}/api2/json", 
+            "insecure_skip_tls_verify": true,
+            "username": "{{user `proxmox_username`}}",
+            "password": "{{user `proxmox_password`}}",
+            "vm_name": "alpine",
+            "template_description":"proxmox packer build alpine linux",
+            "memory": "4096",
+            "cores": "2",
+            "os": "l26",
+            "http_directory": "http",
+
+            "node": "{{user `proxmox_node_name`}}",
+            "network_adapters": [
+              {
+                "model": "virtio",
+                "bridge": "vmbr0"
+              }
+            ],
+            "disks": [
+              {
+                "type": "sata",
+                "disk_size": "8G",
+                "storage_pool": "local",
+                "storage_pool_type": "directory",
+                "format": "qcow2"
+              }
+            ],
+            "ssh_username": "packer",
+            "ssh_password": "packer",
+            "ssh_timeout": "15m",
+            "iso_file": "ISOs:iso/alpine-standard-3.13.0-x86_64.iso",
+            "unmount_iso": true,
+            "boot_wait": "10s",
+            "boot_command": [
+                "root<enter><wait>",
+                "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>",
+                "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/answers<enter><wait>",
+                "setup-alpine -f $PWD/answers<enter><wait5>",
+                "{{user `proxmox_password`}}<enter><wait>",
+                "{{user `proxmox_password`}}<enter><wait>",
+                "<wait10><wait5>",
+                "y<enter>",
+                "<wait10><wait10>",
+#                "rc-service sshd stop <enter>",
+                "mount /dev/sda2 /mnt <enter>",
+                "mount /dev/ /mnt/dev/ --bind <enter>",
+                "mount -t proc none /mnt/proc <enter>",
+                "mount -o bind /sys /mnt/sys <enter>",
+                "chroot /mnt /bin/sh -l <enter><wait>",
+                "echo '@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories <enter>",
+                "echo -e 'nameserver 1.1.1.1' > /etc/resolv.conf <enter>",
+                "apk update <enter><wait10>",
+                "apk add 'qemu-guest-agent@edgecommunity' 'python' <enter><wait>",
+                "echo -e GA_PATH=\"/dev/vport1p1\" >> /etc/conf.d/qemu-guest-agent <enter>",
+                "rc-update add qemu-guest-agent <enter>",
+                "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config <enter>",
+                "exit <enter><wait>",
+                "umount /mnt/sys <enter><wait>",
+                "umount /mnt/proc <enter><wait>",
+                "umount /mnt/dev <enter><wait>",
+                "umount /mnt <enter>",
+                "reboot <enter>"
+            ]
+        }
+    ]
+}
