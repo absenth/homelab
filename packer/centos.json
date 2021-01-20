@@ -36,7 +36,7 @@
 "qemu_agent": true,
 "unmount_iso": true,
 
-"iso_file": "ISOs:iso/CentOS-8.2.2004-x86_64-boot.iso",
+"iso_file": "ISOs:iso/CentOS-Stream-8-x86_64-20201211-boot.iso",
 "cores": "2",
 "sockets": "2",
 "memory": "2048",

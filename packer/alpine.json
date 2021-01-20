@@ -14,6 +14,7 @@
             "http_directory": "http",
 
             "node": "{{user `proxmox_node_name`}}",
+	    "qemu_agent": true,
             "network_adapters": [
               {
                 "model": "virtio",
@@ -45,7 +46,6 @@
                 "<wait10><wait5>",
                 "y<enter>",
                 "<wait10><wait10>",
-#                "rc-service sshd stop <enter>",
                 "mount /dev/sda2 /mnt <enter>",
                 "mount /dev/ /mnt/dev/ --bind <enter>",
                 "mount -t proc none /mnt/proc <enter>",
@@ -54,7 +54,9 @@
                 "echo '@edgecommunity http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories <enter>",
                 "echo -e 'nameserver 1.1.1.1' > /etc/resolv.conf <enter>",
                 "apk update <enter><wait10>",
+		"echo 'LOOK AT ME LOOK AT ME LOOK AT ME'",
                 "apk add 'qemu-guest-agent@edgecommunity' 'python' <enter><wait>",
+		"sleep 30",
                 "echo -e GA_PATH=\"/dev/vport1p1\" >> /etc/conf.d/qemu-guest-agent <enter>",
                 "rc-update add qemu-guest-agent <enter>",
                 "echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config <enter>",
@@ -66,5 +68,20 @@
                 "reboot <enter>"
             ]
         }
-    ]
+    ],
+    "provisioners": [
+	    {
+		    "inline":[
+			    "echo Add Ansible user",
+			    "adduser ansible --disable-password",
+			    "adduser ansible wheel",
+			    "echo add SSH key for Ansible",
+			    "mkdir $ansible/.ssh",
+			    "chmod 700 $ansible/.ssh",
+			    "echo ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQmublU2tTKJ44bZC7YEK21Qu3LEU/p1LnITs2asdzxrgOWr7i8Rv40TaSvPLdUHofUUKfOHYbAhswhUQHEavyFdTIONiYRXzGZSF5hZ7nLl06DVYsJl/9G9z2y7vAtCyhltNB9d7Hg6VxZn7JTgUyzRaq8ijbsExiNXGm6+PkHf7yWJdoSUuKYHjktUNSfTicmjlytHtpmekDRj3jSZMmXz5w+PSK8QFUMhtzNF348i/OJZRmoz8PXlyWoFW0c+5T5KBUkRu7zrFbb5I/PKchpLBtXy3GnkFNBQ+6Q0f1h6N86pO8rphlGG2cg+cLfjN6yC8dCdw1Vgl5Ra6tYUzjJ6UpVdapQ2BZmO2rVsX7oo9miSA3OZ2U/og5ynR6FQsL4IvnuDEs0sZvHl3mhbJ6asxhmpzLLWUwWgCg06oe0ZlpOrlQTQy6fXLHhlS/xa/yh5+28R+6EXAqKKfUBYVJNkKV1QQJRti4JobIg4nwfqeZvK6TBF26QYH1oJ1MYzs= > $ansible/.ssh/authorized_keys",
+			    "chmod 755 $ansible/.ssh/authorized_keys"
+		    ],
+		    "type": "shell"
+		}
+	]
 }
