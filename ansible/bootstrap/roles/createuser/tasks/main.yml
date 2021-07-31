@@ -1,0 +1,53 @@
+# roles/createuser/tasks/main.yml
+# This creates a new user, copies the root .ssh/authorized_keys to its home
+# and gives it nopasswd sudo.
+# This assumes that the server is already configured to have root login by
+# SSH pubkey, which can be done on DigitalOcean.
+---
+# When using this role from the maybecreateuser role, gather_facts must be
+# disabled at the playbook level to avoid initialization problems.
+# Ensure the facts are gathered now, since we need them.
+- name: "gather facts"
+  setup:
+
+# We'll give the user nopasswd sudo later, so it doesn't need to set a password
+- name: "create new user without a password"
+  register: newuser
+  user:
+    name: "{{ username }}"
+    create_home: yes
+    groups: sudo
+    state: present
+    shell: /bin/bash
+
+- name: "create .ssh for the new user"
+  file:
+    mode: 0700
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    path: "{{ newuser.home }}/.ssh"
+    state: directory
+
+- name: "copy authorized_keys to new user's .ssh folder"
+  copy:
+    remote_src: yes
+    src: "{{ ansible_env.HOME }}/.ssh/authorized_keys"
+    dest: "{{ newuser.home }}/.ssh/authorized_keys"
+    # remote_src requires mode: preserve; update the owner and perms later
+    mode: preserve
+
+- name: "change mode of authorized_keys file"
+  file:
+    mode: 0644
+    path: "{{ newuser.home }}/.ssh/authorized_keys"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: "sudo nopasswd for the new user"
+  template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ username }}"
+    owner: root
+    group: root
+    mode: 0440
+    validate: /usr/sbin/visudo -cf %s

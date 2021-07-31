@@ -1,0 +1,30 @@
+# roles/maybecreateuser/tasks/main.yml
+# `gather_facts: no` must be set when using this role
+# Uses a variable `initial_user` which defaults to "root". 
+# Set this if the initial user is not "root".
+---
+# To bootstrap from root to $ansible_user, we need to swap in the
+# $initial_user var into $initial_user, yet still retain the value
+# of $ansible_user so that we know what user to create.
+- name: "Register username var"
+  set_fact:
+    username: "{{ ansible_user }}"
+
+# Test if the original ansible_user can SSH in or not.
+# If not, assume we can SSH in with the initial_user
+# and setup the ansible_user.
+- name: Create new user if not exists
+  vars:
+    - ansible_user: "{{ initial_user | default('root') }}"
+  block:
+    - name: Check if new user already exists
+      command: 'ssh -q -o BatchMode=yes -o ConnectTimeout=3 {{ username }}@{{ inventory_hostname }} "echo OK"'
+      delegate_to: localhost
+      changed_when: false
+      failed_when: false
+      register: check_new_user
+
+    - name: Create new user
+      import_role:
+        name: createuser
+      when: not "OK" in check_new_user.stdout
