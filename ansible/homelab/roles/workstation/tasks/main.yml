@@ -1,0 +1,9 @@
+---
+- name: Add/Configure user Absenth
+  ansible.builtin.user:
+    name: absenth
+    comment: Absenth 762
+    group: wheel
+    shell: /bin/zsh
+    generate_ssh_key: yes
+    ssh_key_bits: 2048

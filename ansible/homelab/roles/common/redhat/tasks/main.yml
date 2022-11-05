@@ -1,0 +1,43 @@
+---
+- name: Update All Redhat Family Packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  when: ansible_os_family == "RedHat"
+
+- name: Install Packages on all OS
+  ansible.builtin.package:
+    name: 
+      - vim
+      - tmux
+      - zsh
+      - curl
+      - wget
+      - nmap
+      - cargo
+      - fd-find
+      - ripgrep
+      - conky
+      - alacritty
+    state: latest
+
+- name: Install Redhat Family Packages
+  ansible.builtin.dnf:
+    name:
+      - python3-pip
+      - libvirt-devel
+      - i3-gaps
+  when: ansible_os_family == "RedHat"
+
+- name: Check if YADM is installed
+  stat:
+    path: /usr/local/bin/yadm
+  register: yadm
+
+- name: Install YADM 
+  ansible.builtin.command: curl -fLo /usr/local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+  when: yadm.stat.exists == False 
+
+- name: Make YADM Executable
+  ansible.builtin.command: chmod a+x /usr/local/bin/yadm
+  when: yadm.stat.exists == False

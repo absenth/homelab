@@ -1,0 +1,36 @@
+---
+- name: Update All Debian Family Packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Install Packages on all OS
+  ansible.builtin.package:
+    name: 
+      - vim
+      - tmux
+      - zsh
+      - curl
+      - wget
+      - nmap
+      - cargo
+      - fd-find
+      - ripgrep
+      - conky
+      - alacritty
+    state: latest
+
+- name: Check if YADM is installed
+  stat:
+    path: /usr/local/bin/yadm
+  register: yadm
+
+- name: Install YADM 
+  ansible.builtin.command: curl -fLo /usr/local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+  when: yadm.stat.exists == False 
+
+- name: Make YADM Executable
+  ansible.builtin.command: chmod a+x /usr/local/bin/yadm
+  when: yadm.stat.exists == False

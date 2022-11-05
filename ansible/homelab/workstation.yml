@@ -1,0 +1,24 @@
+---
+- hosts: redhat
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: common/redhat
+
+- hosts: debian
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: common/debian
+
+- hosts: apple
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: common/apple
+
+- hosts: all
+  gather_facts: yes
+  become: yes
+  roles:
+    - role: workstation   
