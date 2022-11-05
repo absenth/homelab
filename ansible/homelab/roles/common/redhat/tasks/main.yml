@@ -1,12 +1,33 @@
 ---
+- name: Add RPMFusion Free Signing Key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020
+
+- name: Add RPMFusion NonFree Signing Key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020
+
+- name: Add RPMFusion Free
+  ansible.builtin.dnf:
+    name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+    state: present
+  when: ansible_distribution == 'Fedora'
+
+- name: Add RPMFusion NonFree
+  ansible.builtin.dnf:
+    name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+    state: present
+  when: ansible_distribution == 'Fedora'
+
 - name: Update All Redhat Family Packages
   ansible.builtin.dnf:
     name: "*"
     state: latest
-  when: ansible_os_family == "RedHat"
 
 - name: Install Packages on all OS
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: 
       - vim
       - tmux
@@ -19,15 +40,10 @@
       - ripgrep
       - conky
       - alacritty
-    state: latest
-
-- name: Install Redhat Family Packages
-  ansible.builtin.dnf:
-    name:
       - python3-pip
       - libvirt-devel
       - i3-gaps
-  when: ansible_os_family == "RedHat"
+      - discord
 
 - name: Check if YADM is installed
   stat:
