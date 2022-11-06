@@ -43,30 +43,38 @@
   ansible.builtin.dnf:
     name: 
       - '@Development tools'
-      - alacritty
       - cargo
       - cmake
       - code
-      - conky
       - curl
       - discord
       - gnome-tweaks
       - golang
       - golang-x-tools-gopls
-      - i3-gaps
       - lame
       - libtool
-      - nitrogen
+      - neofetch
       - nmap
       - pipewire-codec-aptx
       - python3-pip
-      - ripgrep
       - tmux
       - torbrowser-launcher
       - vim
       - wget
-      - xrandr
       - zsh
+    state: latest
+
+- name: Install Tiling Window Manager stuff
+  ansible.builtin.dnf:
+    name:
+      - alacritty
+      - conky
+      - dmenu
+      - gnome-screenshot
+      - i3-gaps
+      - nitrogen
+      - picom
+      - xrandr
     state: latest
 
 - name: Install Multimedia Codecs
@@ -83,6 +91,8 @@
       - gstreamer1-plugins-good-extras
       - gstreamer1-plugins-ugly
       - mpv
+      - pavucontrol
+      - pavumeter
       - vlc
     state: latest
 
@@ -93,6 +103,7 @@
       - fd-find
       - ffmpeg
       - libvirt-devel
+      - ripgrep
     state: latest
 
 - name: Install pre-requisite software for Suckless Tools
