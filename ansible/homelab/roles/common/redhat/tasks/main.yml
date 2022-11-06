@@ -9,6 +9,11 @@
     state: present
     key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020
 
+- name: Add Microsoft Signing Key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://packages.microsoft.com/keys/microsoft.asc
+
 - name: Add RPMFusion Free
   ansible.builtin.dnf:
     name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
@@ -21,6 +26,14 @@
     state: present
   when: ansible_distribution == 'Fedora'
 
+- name: Add Microsoft Repo for VSCode
+  ansible.builtin.yum_repository:
+    name: Microsoft
+    description: Microsoft YUM Repo
+    state: present
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+    enabled: yes
+
 - name: Update All Redhat Family Packages
   ansible.builtin.dnf:
     name: "*"
@@ -29,21 +42,67 @@
 - name: Install Packages on all OS
   ansible.builtin.dnf:
     name: 
-      - vim
-      - tmux
-      - zsh
-      - curl
-      - wget
-      - nmap
-      - cargo
-      - fd-find
-      - ripgrep
-      - conky
+      - '@Development tools'
       - alacritty
-      - python3-pip
-      - libvirt-devel
-      - i3-gaps
+      - cargo
+      - cmake
+      - code
+      - conky
+      - curl
       - discord
+      - gnome-tweaks
+      - golang
+      - golang-x-tools-gopls
+      - i3-gaps
+      - lame
+      - libtool
+      - nitrogen
+      - nmap
+      - pipewire-codec-aptx
+      - python3-pip
+      - ripgrep
+      - tmux
+      - torbrowser-launcher
+      - vim
+      - wget
+      - xrandr
+      - zsh
+    state: latest
+
+- name: Install Multimedia Codecs
+  ansible.builtin.dnf:
+    name: 
+      - gstreamer1-libav
+      - gstreamer1-plugin-openh264
+      - gstreamer1-plugins-bad-free-extras
+      - gstreamer1-plugins-bad-free-fluidsynth
+      - gstreamer1-plugins-bad-free-wildmidi
+      - gstreamer1-plugins-bad-free-zbar
+      - gstreamer1-plugins-bad-freeworld
+      - gstreamer1-plugins-base
+      - gstreamer1-plugins-good-extras
+      - gstreamer1-plugins-ugly
+      - mpv
+      - vlc
+    state: latest
+
+- name: Install pre-requisite software for DOOM Emacs
+  ansible.builtin.dnf:
+    name:
+      - emacs
+      - fd-find
+      - ffmpeg
+      - libvirt-devel
+    state: latest
+
+- name: Install pre-requisite software for Suckless Tools
+  ansible.builtin.dnf:
+    name: 
+      - fontconfig-devel
+      - freetype-devel
+      - libX11-devel
+      - libXft-devel
+    state: latest
 
 - name: Check if YADM is installed
   stat:
