@@ -116,7 +116,7 @@
     state: latest
 
 - name: Check if YADM is installed
-  stat:
+  ansible.builtin.stat:
     path: /usr/local/bin/yadm
   register: yadm
 
