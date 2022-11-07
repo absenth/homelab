@@ -55,6 +55,7 @@
       - libtool
       - neofetch
       - nmap
+      - openssh-server
       - pipewire-codec-aptx
       - python3-pip
       - tmux
@@ -127,3 +128,9 @@
 - name: Make YADM Executable
   ansible.builtin.command: chmod a+x /usr/local/bin/yadm
   when: yadm.stat.exists == False
+
+- name: Make sure openssh server is running
+  ansible.builtin.systemd:
+    state: started
+    name: sshd
+

@@ -13,17 +13,17 @@
       - tmux
       - zsh
       - curl
+      - git
       - wget
       - nmap
       - cargo
       - fd-find
       - ripgrep
       - conky
-      - alacritty
     state: latest
 
 - name: Check if YADM is installed
-  stat:
+  ansible.builtin.stat:
     path: /usr/local/bin/yadm
   register: yadm
 
