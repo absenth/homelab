@@ -8,18 +8,18 @@
 
 - name: Install Packages on all OS
   ansible.builtin.package:
-    name: 
-      - vim
-      - tmux
-      - zsh
-      - curl
-      - git
-      - wget
-      - nmap
+    name:
       - cargo
-      - fd-find
-      - ripgrep
       - conky
+      - curl
+      - fd-find
+      - git
+      - nmap
+      - ripgrep
+      - tmux
+      - vim
+      - wget
+      - zsh
     state: latest
 
 - name: Check if YADM is installed
@@ -27,10 +27,19 @@
     path: /usr/local/bin/yadm
   register: yadm
 
-- name: Install YADM 
+- name: Install YADM
   ansible.builtin.command: curl -fLo /usr/local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
-  when: yadm.stat.exists == False 
+  when: yadm.stat.exists == False
 
 - name: Make YADM Executable
   ansible.builtin.command: chmod a+x /usr/local/bin/yadm
   when: yadm.stat.exists == False
+
+- name: Add/Configure user Absenth
+  ansible.builtin.user:
+    name: absenth
+    comment: Absenth 762
+    groups: sudo
+    shell: /bin/zsh
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
