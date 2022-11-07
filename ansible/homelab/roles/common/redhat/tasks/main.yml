@@ -1,30 +1,62 @@
 ---
-- name: Add RPMFusion Free Signing Key
+- name: Add RPMFusion Free Signing Key for Fedora
   ansible.builtin.rpm_key:
     state: present
     key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-free-fedora-2020
+  when: ansible_distribution == 'Fedora'
 
-- name: Add RPMFusion NonFree Signing Key
+- name: Add RPMFusion NonFree Signing Key for Fedora
   ansible.builtin.rpm_key:
     state: present
     key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020
+  when: ansible_distribution == 'Fedora'
+
+- name: Add RPMFusion Free Signing Key for EL9
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://rpmfusion.org/keys?action=AttachFile&do=view&target=RPM-GPG-KEY-rpmfusion-free-el-9
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Add RPMFusion NonFree Signing Key for EL9
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://rpmfusion.org/keys?action=AttachFile&do=get&target=RPM-GPG-KEY-rpmfusion-nonfree-fedora-2020
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Add Microsoft Signing Key
   ansible.builtin.rpm_key:
     state: present
     key: https://packages.microsoft.com/keys/microsoft.asc
 
-- name: Add RPMFusion Free
+- name: Add RPMFusion Free Fedora
   ansible.builtin.dnf:
     name: "https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
     state: present
   when: ansible_distribution == 'Fedora'
 
-- name: Add RPMFusion NonFree
+- name: Add RPMFusion NonFree Fedora
   ansible.builtin.dnf:
     name: "https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
     state: present
   when: ansible_distribution == 'Fedora'
+
+- name: Add EPEL EL9
+  ansible.builtin.dnf:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ansible_distribution_major_version}}.noarch.rpm"
+    state: present
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Add RPMFusion Free EL9
+  ansible.builtin.dnf:
+    name: "https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-{{ansible_distribution_major_version}}.noarch.rpm"
+    state: present
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Add RPMFusion NonFree EL9
+  ansible.builtin.dnf:
+    name: "https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-{{ansible_distribution_major_version}}.noarch.rpm"
+    state: present
+  when: ansible_distribution == 'Red Hat Enterprise Linux'
 
 - name: Add Microsoft Repo for VSCode
   ansible.builtin.yum_repository:
@@ -41,7 +73,7 @@
 
 - name: Install Packages on all OS
   ansible.builtin.dnf:
-    name: 
+    name:
       - '@Development tools'
       - cargo
       - cmake
@@ -80,7 +112,7 @@
 
 - name: Install Multimedia Codecs
   ansible.builtin.dnf:
-    name: 
+    name:
       - gstreamer1-libav
       - gstreamer1-plugin-openh264
       - gstreamer1-plugins-bad-free-extras
@@ -109,7 +141,7 @@
 
 - name: Install pre-requisite software for Suckless Tools
   ansible.builtin.dnf:
-    name: 
+    name:
       - fontconfig-devel
       - freetype-devel
       - libX11-devel
@@ -121,9 +153,9 @@
     path: /usr/local/bin/yadm
   register: yadm
 
-- name: Install YADM 
+- name: Install YADM
   ansible.builtin.command: curl -fLo /usr/local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm
-  when: yadm.stat.exists == False 
+  when: yadm.stat.exists == False
 
 - name: Make YADM Executable
   ansible.builtin.command: chmod a+x /usr/local/bin/yadm
@@ -134,3 +166,11 @@
     state: started
     name: sshd
 
+- name: Add/Configure user Absenth
+  ansible.builtin.user:
+    name: absenth
+    comment: Absenth 762
+    groups: wheel, libvirt
+    shell: /bin/zsh
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
