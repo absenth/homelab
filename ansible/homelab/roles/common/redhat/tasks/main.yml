@@ -74,6 +74,7 @@
 - name: Install Fedora Specific Packages
   ansible.builtin.dnf:
     name:
+      - discord
       - golang-x-tools-gopls
       - pipewire-codec-aptx
       - torbrowser-launcher
@@ -89,7 +90,6 @@
       - cmake
       - code
       - curl
-      - discord
       - gnome-tweaks
       - golang
       - lame
