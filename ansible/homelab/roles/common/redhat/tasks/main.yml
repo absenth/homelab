@@ -71,6 +71,16 @@
     name: "*"
     state: latest
 
+- name: Install Fedora Specific Packages
+  ansible.builtin.dnf:
+    name:
+      - golang-x-tools-gopls
+      - pipewire-codec-aptx
+      - torbrowser-launcher
+    state: latest
+  when: ansible_distribution == 'Fedora'
+
+
 - name: Install Packages on all OS
   ansible.builtin.dnf:
     name:
@@ -82,16 +92,13 @@
       - discord
       - gnome-tweaks
       - golang
-      - golang-x-tools-gopls
       - lame
       - libtool
       - neofetch
       - nmap
       - openssh-server
-      - pipewire-codec-aptx
       - python3-pip
       - tmux
-      - torbrowser-launcher
       - vim
       - wget
       - zsh
