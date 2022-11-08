@@ -76,6 +76,7 @@
     name:
       - discord
       - golang-x-tools-gopls
+      - libvirt-devel
       - neofetch
       - pipewire-codec-aptx
       - torbrowser-launcher
@@ -121,6 +122,7 @@
 - name: Install Multimedia Codecs
   ansible.builtin.dnf:
     name:
+      - ffmpeg
       - gstreamer1-libav
       - gstreamer1-plugin-openh264
       - gstreamer1-plugins-bad-free-extras
@@ -143,10 +145,9 @@
     name:
       - emacs
       - fd-find
-      - ffmpeg
-      - libvirt-devel
       - ripgrep
     state: latest
+  when: ansible_distribution == 'Fedora'
 
 - name: Install pre-requisite software for Suckless Tools
   ansible.builtin.dnf:
