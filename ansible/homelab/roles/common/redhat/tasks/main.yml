@@ -76,6 +76,7 @@
     name:
       - discord
       - golang-x-tools-gopls
+      - neofetch
       - pipewire-codec-aptx
       - torbrowser-launcher
     state: latest
@@ -94,7 +95,6 @@
       - golang
       - lame
       - libtool
-      - neofetch
       - nmap
       - openssh-server
       - python3-pip
