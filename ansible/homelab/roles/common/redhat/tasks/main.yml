@@ -116,6 +116,7 @@
       - picom
       - xrandr
     state: latest
+  when: ansible_distribution == 'Fedora'
 
 - name: Install Multimedia Codecs
   ansible.builtin.dnf:
@@ -135,6 +136,7 @@
       - pavumeter
       - vlc
     state: latest
+  when: ansible_distribution == 'Fedora'
 
 - name: Install pre-requisite software for DOOM Emacs
   ansible.builtin.dnf:
@@ -154,6 +156,7 @@
       - libX11-devel
       - libXft-devel
     state: latest
+  when: ansible_distribution == 'Fedora'
 
 - name: Check if YADM is installed
   ansible.builtin.stat:
